@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.basketballscorecounter.databinding.ActivityMainBinding;
 
@@ -12,9 +13,11 @@ public class MainActivity extends AppCompatActivity {
 //    wiazanie danych:
 //    - dodac build grade module
 
-    private ActivityMainBinding binding;
+//    dzienki dindowaniu widokow nie musimy uzywac findViewById
 
-    private int score = 0;
+    PointsViewModel pointsViewModel;
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(view);
 
-        binding.addOneButton.setOnClickListener(view_local -> {
-            score++;
+        pointsViewModel = new ViewModelProvider(this).get(PointsViewModel.class);
 
-            binding.scoreTextView.setText(Integer.toString(score));
+        binding.scoreTextView.setText(Integer.toString(pointsViewModel.getScore()));
+
+
+        binding.addOneButton.setOnClickListener(view_local -> {
+            pointsViewModel.incScore(1);
+
+            binding.scoreTextView.setText(Integer.toString(pointsViewModel.getScore()));
         });
     }
 }

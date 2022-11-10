@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.basketballscorecounter.databinding.ActivityMainBinding;
@@ -31,13 +32,24 @@ public class MainActivity extends AppCompatActivity {
 
         pointsViewModel = new ViewModelProvider(this).get(PointsViewModel.class);
 
-        binding.scoreTextView.setText(Integer.toString(pointsViewModel.getScore()));
+        pointsViewModel.getScore().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                binding.scoreTextView.setText(integer.toString());
+            }
+        });
 
 
         binding.addOneButton.setOnClickListener(view_local -> {
             pointsViewModel.incScore(1);
+        });
 
-            binding.scoreTextView.setText(Integer.toString(pointsViewModel.getScore()));
+        binding.addTwoButton.setOnClickListener(view_local -> {
+            pointsViewModel.incScore(2);
+        });
+
+        binding.addThreeButton.setOnClickListener(view_local -> {
+            pointsViewModel.incScore(3);
         });
     }
 }

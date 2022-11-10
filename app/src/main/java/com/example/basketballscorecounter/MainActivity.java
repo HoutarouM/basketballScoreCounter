@@ -1,5 +1,6 @@
 package com.example.basketballscorecounter;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     PointsViewModel pointsViewModel;
 
     private ActivityMainBinding binding;
+    private SharedPreferences scoreSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(view);
 
+        scoreSharedPreferences = getPreferences(MODE_PRIVATE);
+
         pointsViewModel = new ViewModelProvider(this).get(PointsViewModel.class);
+
+        readScoreFromSharedPreferences();
 
         pointsViewModel.getScore().observe(this, new Observer<Integer>() {
             @Override
@@ -51,5 +57,26 @@ public class MainActivity extends AppCompatActivity {
         binding.addThreeButton.setOnClickListener(view_local -> {
             pointsViewModel.incScore(3);
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveScoreToSharedPreferences();
+    }
+
+    private void saveScoreToSharedPreferences() {
+        SharedPreferences.Editor editor = scoreSharedPreferences.edit();
+
+        editor.putInt("score", pointsViewModel.getScore().getValue());
+
+        editor.apply();
+    }
+
+    private void readScoreFromSharedPreferences() {
+        Integer p = scoreSharedPreferences.getInt("score", 0);
+
+        pointsViewModel.setScore(p);
     }
 }

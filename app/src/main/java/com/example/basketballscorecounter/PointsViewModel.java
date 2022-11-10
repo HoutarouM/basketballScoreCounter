@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class PointsViewModel extends ViewModel {
-    private MutableLiveData<Integer> score;
+    private MutableLiveData<Integer> score = new MutableLiveData<>();
 
     public MutableLiveData<Integer> getScore() {
         if (score == null) {
